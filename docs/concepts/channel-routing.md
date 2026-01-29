@@ -53,28 +53,6 @@ The matched agent determines which workspace and session store are used.
 
 ![Channel Routing Priority Cascade](/images/diagrams/05-channel-routing.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    MSG[Inbound Message] --> P1{Exact Peer Match?}
-    P1 -->|Yes| FOUND[Agent Found]
-    P1 -->|No| P2{Guild Match?\nDiscord guildId}
-    P2 -->|Yes| FOUND
-    P2 -->|No| P3{Team Match?\nSlack teamId}
-    P3 -->|Yes| FOUND
-    P3 -->|No| P4{Account Match?\naccountId}
-    P4 -->|Yes| FOUND
-    P4 -->|No| P5{Channel Match?\nany account}
-    P5 -->|Yes| FOUND
-    P5 -->|No| P6[Default Agent\nagents.list default\nor first entry\nor 'main']
-    P6 --> FOUND
-    FOUND --> WS[Workspace + Session Store]
-```
-
-</details>
-
 ## Broadcast groups (run multiple agents)
 
 Broadcast groups let you run **multiple agents** for the same peer **when Moltbot would normally reply** (for example: in WhatsApp groups, after mention/activation gating).
@@ -94,24 +72,6 @@ Config:
 See: [Broadcast Groups](/broadcast-groups).
 
 ![Broadcast vs Normal Routing](/images/diagrams/29-broadcast-vs-normal.png)
-
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    MSG[Inbound Message\nfrom peer] --> BC{Peer in\nBroadcast Config?}
-    BC -->|Yes| MULTI[Broadcast:\nAll listed agents process\nisolated sessions each]
-    BC -->|No| BIND{Peer in\nBindings?}
-    BIND -->|Yes| SINGLE[Normal Routing:\nOne matched agent]
-    BIND -->|No| DEFAULT[Default Agent\nfallback routing]
-
-    MULTI --> REPLY_M[Multiple Replies\nfrom each agent]
-    SINGLE --> REPLY_S[Single Reply]
-    DEFAULT --> REPLY_S
-```
-
-</details>
 
 ## Config overview
 

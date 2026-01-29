@@ -1,7 +1,7 @@
 # 🦞 Moltbot — Personal AI Assistant
 
 <p align="center">
-  <img src="/images/diagrams/30-hero-banner.png" alt="Moltbot — Your AI Agent, Everywhere You Message" width="800">
+  <img src="https://raw.githubusercontent.com/davendra/moltbot/main/docs/images/diagrams/30-hero-banner.png" alt="Moltbot — Your AI Agent, Everywhere You Message" width="800">
 </p>
 
 <p align="center">
@@ -52,47 +52,7 @@ moltbot onboard --install-daemon
 The wizard installs the Gateway daemon (launchd/systemd user service) so it stays running.
 Legacy note: `clawdbot` remains available as a compatibility shim.
 
-![Moltbot Architecture Overview](/images/diagrams/27-readme-architecture.png)
-
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-graph LR
-    subgraph Channels [Messaging Channels]
-        WA[WhatsApp]
-        TG[Telegram]
-        SL[Slack]
-        DC[Discord]
-        SIG[Signal]
-        IM[iMessage]
-        WC[WebChat]
-        MORE[+ more]
-    end
-
-    GW[Gateway\nWebSocket + HTTP\nControl Plane]
-
-    subgraph Agent [AI Agent]
-        RT[Runtime\npi-agent-core]
-        SK[Skills]
-        MEM[Memory]
-    end
-
-    subgraph Tools [Agent Tools]
-        EXEC[Shell / FS]
-        BR[Browser]
-        MSG[Messaging]
-        CRON[Cron / Automation]
-    end
-
-    Channels -->|inbound| GW
-    GW -->|route + queue| Agent
-    Agent -->|tool calls| Tools
-    Agent -->|reply| GW
-    GW -->|outbound| Channels
-```
-
-</details>
+![Moltbot Architecture Overview](https://raw.githubusercontent.com/davendra/moltbot/main/docs/images/diagrams/27-readme-architecture.png)
 
 ## Quick start (TL;DR)
 

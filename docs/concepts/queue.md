@@ -9,32 +9,6 @@ We serialize inbound auto-reply runs (all channels) through a tiny in-process qu
 
 ![Lane-Aware FIFO Queue](/images/diagrams/07-queue-lanes.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart LR
-    subgraph SessionLanes [Session Lanes\none run per session]
-        SL1[session:agent:main:main]
-        SL2[session:agent:main:telegram:group:123]
-        SL3[session:agent:work:main]
-    end
-
-    subgraph GlobalLanes [Global Lanes]
-        ML[Main Lane\nconcurrency: 4]
-        SAL[Subagent Lane\nconcurrency: 8]
-        CL[Cron Lane]
-    end
-
-    SL1 --> ML
-    SL2 --> ML
-    SL3 --> ML
-    SAL -.->|parallel| ML
-    CL -.->|parallel| ML
-```
-
-</details>
-
 ## Why
 - Auto-reply runs can be expensive (LLM calls) and can collide when multiple inbound messages arrive close together.
 - Serializing avoids competing for shared resources (session files, logs, CLI stdin) and reduces the chance of upstream rate limits.
@@ -56,32 +30,6 @@ Inbound messages can steer the current run, wait for a followup turn, or do both
 - `queue` (legacy alias): same as `steer`.
 
 ![Queue Modes State Machine](/images/diagrams/08-queue-modes.png)
-
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-stateDiagram-v2
-    [*] --> Idle: No active run
-
-    Idle --> Running: Message arrives
-    Running --> Steer: steer mode\ninject into run
-    Running --> Followup: followup mode\nqueue for next turn
-    Running --> Collect: collect mode\ncoalesce messages
-    Running --> Interrupt: interrupt mode\nabort + run newest
-
-    Steer --> Running: Tool boundary reached
-    Followup --> Idle: Current run ends
-    Followup --> Running: Followup turn starts
-    Collect --> Idle: Current run ends
-    Collect --> Running: Single combined turn
-    Interrupt --> Running: New run starts
-
-    Running --> SteerBacklog: steer-backlog mode
-    SteerBacklog --> Running: Steer now + preserve for followup
-```
-
-</details>
 
 Steer-backlog means you can get a followup response after the steered run, so
 streaming surfaces can look like duplicates. Prefer `collect`/`steer` if you want

@@ -12,24 +12,6 @@ Last updated: 2025-12-09
 
 ![Gateway Lifecycle States](/images/diagrams/23-gateway-lifecycle.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-stateDiagram-v2
-    [*] --> NotInstalled
-    NotInstalled --> Installing: moltbot gateway install
-    Installing --> Installed: LaunchAgent / systemd unit created
-    Installed --> Running: Service starts
-    Running --> Running: Config hot-reload\nSIGUSR1 in-process restart
-    Running --> Stopped: moltbot gateway stop\nSIGTERM
-    Stopped --> Running: moltbot gateway restart\nService supervisor
-    Running --> Error: Fatal error
-    Error --> Running: Supervisor auto-restart\nRestartSec=5
-```
-
-</details>
-
 - Replaces the legacy `gateway` command. CLI entry point: `moltbot gateway`.
 - Runs until stopped; exits non-zero on fatal errors so the supervisor restarts it.
 
@@ -44,20 +26,6 @@ moltbot gateway --force
 pnpm gateway:watch
 ```
 ![Config Hot-Reload](/images/diagrams/24-hot-reload.png)
-
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart LR
-    WATCH[File Watcher\n~/.clawdbot/moltbot.json] --> DEBOUNCE[Debounce]
-    DEBOUNCE --> ANALYZE{Analyze Changes}
-    ANALYZE -->|Safe changes\nthresholds, toggles| HOT[Hot Apply\nNo restart needed]
-    ANALYZE -->|Critical changes\nport, auth, channels| RESTART[In-Process Restart\nSIGUSR1]
-    ANALYZE -->|reload.mode=off| IGNORE[Ignored]
-```
-
-</details>
 
 - Config hot reload watches `~/.clawdbot/moltbot.json` (or `CLAWDBOT_CONFIG_PATH`).
   - Default mode: `gateway.reload.mode="hybrid"` (hot-apply safe changes, restart on critical).

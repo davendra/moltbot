@@ -11,35 +11,6 @@ Goal: multiple *isolated* agents (separate workspace + `agentDir` + sessions), p
 
 ![Multi-Agent Isolation](/images/diagrams/06-multi-agent.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-graph TD
-    GW[Gateway Process] --> A1[Agent: home]
-    GW --> A2[Agent: work]
-
-    subgraph Agent_home [Agent 'home']
-        W1[Workspace\n~/clawd-home]
-        S1[Sessions\n~/.clawdbot/agents/home/sessions]
-        AP1[Auth Profiles\n~/.clawdbot/agents/home/agent/auth-profiles.json]
-        SK1[Skills\n~/clawd-home/skills/]
-    end
-
-    subgraph Agent_work [Agent 'work']
-        W2[Workspace\n~/clawd-work]
-        S2[Sessions\n~/.clawdbot/agents/work/sessions]
-        AP2[Auth Profiles\n~/.clawdbot/agents/work/agent/auth-profiles.json]
-        SK2[Skills\n~/clawd-work/skills/]
-    end
-
-    B1[Binding: WhatsApp personal] --> A1
-    B2[Binding: WhatsApp biz] --> A2
-    B3[Binding: Telegram] --> A2
-```
-
-</details>
-
 ## What is "one agent"?
 
 An **agent** is a fully scoped brain with its own:

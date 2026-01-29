@@ -15,34 +15,6 @@ There is **no real token streaming** to external channel messages today. Telegra
 
 ![Streaming Delivery Paths](/images/diagrams/13-streaming.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    MODEL[Model Output\ntext_delta events] --> BS{Block Streaming\nEnabled?}
-    BS -->|Off| FINAL[Wait for Final Reply]
-    BS -->|On| BREAK{Break Mode?}
-    BREAK -->|text_end| CHUNK1[Chunker Emits\nas Buffer Grows]
-    BREAK -->|message_end| CHUNK2[Chunker Flushes\nat message_end]
-    CHUNK1 --> COAL{Coalesce?}
-    CHUNK2 --> COAL
-    COAL -->|Yes| MERGE[Merge Consecutive Chunks\nidle-gap based]
-    COAL -->|No| SEND[Channel Send]
-    MERGE --> SEND
-    FINAL --> SEND
-    SEND --> LIMIT{Channel Limits}
-    LIMIT --> SPLIT[Split by textChunkLimit\npreserve code fences]
-    SPLIT --> DELIVER[Delivered to Channel]
-
-    MODEL --> TG{Telegram?}
-    TG -->|Yes| DRAFT[Draft Bubble\nsendMessageDraft]
-    DRAFT --> TGFINAL[Final: Normal Message]
-    TG -->|No| BS
-```
-
-</details>
-
 ## Block streaming (channel messages)
 
 Block streaming sends assistant output in coarse chunks as it becomes available.

@@ -11,39 +11,6 @@ source of truth; the model only "remembers" what gets written to disk.
 
 ![Memory Organization](/images/diagrams/12-memory.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    subgraph WorkspaceFiles [Workspace Memory Files]
-        MEM_MD[MEMORY.md\nCurated long-term]
-        DAILY[memory/YYYY-MM-DD.md\nDaily logs]
-    end
-
-    subgraph VectorIndex [Vector Memory Search]
-        EMB[Embedding Provider\nOpenAI / Gemini / Local]
-        IDX[SQLite Index\n~/.clawdbot/memory/agentId.sqlite]
-        BM25[BM25 Full-Text\nKeyword matching]
-    end
-
-    subgraph FlushCycle [Pre-Compaction Flush]
-        NEAR[Session Nears Limit] --> FLUSH[Silent Memory Flush Turn]
-        FLUSH --> WRITE[Write Notes to Disk]
-        WRITE --> COMPACT[Compaction Proceeds]
-    end
-
-    MEM_MD --> EMB
-    DAILY --> EMB
-    EMB --> IDX
-    IDX --> SEARCH[memory_search Tool]
-    BM25 --> SEARCH
-    MEM_MD --> READ[memory_get Tool]
-    DAILY --> READ
-```
-
-</details>
-
 Memory search tools are provided by the active memory plugin (default:
 `memory-core`). Disable memory plugins with `plugins.slots.memory = "none"`.
 

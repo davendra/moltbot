@@ -9,26 +9,6 @@ Moltbot treats **one direct-chat session per agent** as primary. Direct chats co
 
 ![Session Lifecycle](/images/diagrams/28-session-lifecycle.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    CREATE[Session Created\nNew inbound message] --> LOAD[Load Session\nfrom sessions.json + JSONL]
-    LOAD --> EXEC[Execute Agent Run\nStreaming + tools]
-    EXEC --> UPDATE[Update Session\nAppend to JSONL transcript]
-    UPDATE --> CHECK{Near Context Limit?}
-    CHECK -->|No| WAIT[Wait for Next Message]
-    CHECK -->|Yes| COMPACT[Auto-Compaction\nSummarize + retain recent]
-    COMPACT --> WAIT
-    WAIT --> RESET{Reset Triggered?}
-    RESET -->|Daily reset / idle / /new| ARCHIVE[Archive Session\nFresh session ID]
-    RESET -->|No| LOAD
-    ARCHIVE --> CREATE
-```
-
-</details>
-
 Use `session.dmScope` to control how **direct messages** are grouped:
 - `main` (default): all DMs share the main session for continuity.
 - `per-peer`: isolate by sender id across channels.

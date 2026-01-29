@@ -11,46 +11,6 @@ file tools and for workspace context. Keep it private and treat it as memory.
 
 ![Agent Workspace Structure](/images/diagrams/26-workspace.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-graph TD
-    subgraph Workspace ["Agent Workspace (~/clawd)"]
-        AGENTS[AGENTS.md\nOperating instructions]
-        SOUL[SOUL.md\nPersona + tone]
-        USER[USER.md\nUser profile]
-        IDENTITY[IDENTITY.md\nAgent name + emoji]
-        TOOLS[TOOLS.md\nTool notes]
-        HEARTBEAT[HEARTBEAT.md\nHeartbeat checklist]
-        BOOT[BOOT.md\nStartup checklist]
-        BOOTSTRAP[BOOTSTRAP.md\nFirst-run ritual]
-
-        subgraph MemoryDir [memory/]
-            DAILY[YYYY-MM-DD.md\nDaily logs]
-        end
-
-        MEMORY_MD[MEMORY.md\nLong-term memory]
-
-        subgraph SkillsDir [skills/]
-            SKILL[Custom skills]
-        end
-
-        subgraph CanvasDir [canvas/]
-            CANVAS_HTML[index.html\nCanvas UI]
-        end
-    end
-
-    subgraph StateDir ["State Directory (~/.clawdbot)"]
-        CONFIG[moltbot.json\nConfiguration]
-        CREDS[credentials/\nOAuth, API keys]
-        SESSIONS[agents/agentId/sessions/\nTranscripts + metadata]
-        MANAGED_SKILLS[skills/\nManaged skills]
-    end
-```
-
-</details>
-
 This is separate from `~/.clawdbot/`, which stores config, credentials, and
 sessions.
 

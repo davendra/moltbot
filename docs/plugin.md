@@ -114,34 +114,6 @@ wins and lower-precedence copies are ignored.
 
 ![Plugin Discovery Precedence](/images/diagrams/19-plugin-discovery.png)
 
-<details>
-<summary>Diagram source (Mermaid)</summary>
-
-```mermaid
-flowchart TD
-    A[Plugin Discovery] --> B[1. Config Paths\nplugins.load.paths]
-    B --> C[2. Workspace Extensions\nworkspace/.clawdbot/extensions/]
-    C --> D[3. Global Extensions\n~/.clawdbot/extensions/]
-    D --> E[4. Bundled Extensions\nmoltbot/extensions/\ndisabled by default]
-
-    E --> F{Duplicate ID?}
-    F -->|Yes| G[First Match Wins\nlower-precedence ignored]
-    F -->|No| H[Load Plugin]
-
-    H --> I{plugins.allow / deny?}
-    I -->|Denied| J[Skip Plugin]
-    I -->|Allowed| K[Register Plugin]
-
-    K --> L[Gateway RPC Methods]
-    K --> M[Agent Tools]
-    K --> N[CLI Commands]
-    K --> O[Background Services]
-    K --> P[Skills]
-    K --> Q[Plugin Hooks]
-```
-
-</details>
-
 ### Package packs
 
 A plugin directory may include a `package.json` with `moltbot.extensions`:
